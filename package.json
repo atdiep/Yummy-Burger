@@ -1,0 +1,27 @@
+{
+  "name": "yummy-burger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "watch": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atdiep/Yummy-Burger"
+  },
+  "author": "Arnold Diep",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mysql": "^2.16.0",
+    "mysql2": "^1.6.4",
+    "sequelize": "^4.41.2"
+  },
+  "bugs": {
+    "url": "https://github.com/atdiep/Yummy-Burger/issues"
+  },
+  "homepage": "https://github.com/atdiep/Yummy-Burger#readme"
+}
