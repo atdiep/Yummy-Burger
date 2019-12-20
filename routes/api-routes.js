@@ -9,7 +9,8 @@ module.exports = function (app) {
 
     app.post("/api/burgers", function (req, res) {
         db.Burger.create({
-            text: req.body.text
+            text: req.body.text,
+            devour: req.body.devour
         }).then(function (dbBurger) {
             res.json(dbBurger)
         }).catch(function (err) {
@@ -17,13 +18,15 @@ module.exports = function (app) {
         });
     });
 
-    app.delete("/api/burgers/:id", function(req, res) {
-        db.Burger.destroy({
-            where: {
-                id: req.params.id
-            }
-        }).then(function(dbBurger) {
-            res.json(dbBurger)
-        });
+    app.put("/api/burgers/:id", function (req, res) {
+        db.Burger.update({
+            devour: req.body.devour
+        }, {
+                where: {
+                    id: req.params.id
+                }
+            }).then(function (dbBurger) {
+                res.json(dbBurger)
+            });
     });
 };

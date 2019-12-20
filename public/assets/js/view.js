@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // Getting a reference to the input field where user adds a new burger
     var $newItemInput = $("#burgers");
     // New burgers will go inside the burgerContainer
@@ -6,7 +6,7 @@ $(document).ready(function() {
     // Finished burgers will go inside the devouredContainer
     var $devouredContainer = $(".devoured-container");
     // Adding event listeners for adding burgers
-    $(document).on("click", "button.devour", devouredBurger);
+    $(document).on("click", "button.delete", devouredBurger);
     $(document).on("click", "button.insert", insertBurger);
 
     // Initial burgers array
@@ -18,27 +18,35 @@ $(document).ready(function() {
     // This function resets the burgers displayed with new burgers from the database
     function initializeRows() {
         $burgerContainer.empty();
-        var rowstoAdd = [];
+        $devouredContainer.empty();
+        var uneatenBurgers = [];
+        var devouredBurgers = [];
         for (let i = 0; i < burgers.length; i++) {
-            rowstoAdd.push(createNewRow(burgers[i]));
+            if (burgers[i].devour === true) {
+                devouredBurgers.push(createDevourRow(burgers[i]))
+            } else {
+                uneatenBurgers.push(createNewRow(burgers[i]));
+            }
         }
-        $burgerContainer.append(rowstoAdd);
+        $burgerContainer.append(uneatenBurgers);
+        $devouredContainer.append(devouredBurgers);
     }
     // This function grabs burgers from the database and updates the view
     function getBurgers() {
-        $.get("/api/burgers", function(data) {
+        $.get("/api/burgers", function (data) {
             burgers = data;
             initializeRows();
         });
     }
 
-    // This function deletes a burger when the user clicks the devour button
+    // This function updates a burger to 'devour: true' when the user clicks the devour button
     function devouredBurger(event) {
         event.stopPropagation();
         var id = $(this).data("id");
         $.ajax({
-            method: "DELETE",
-            url: "/api/burgers/" + id
+            method: "PUT",
+            url: "/api/burgers/" + id,
+            data: {"devour": true}
         }).then(getBurgers)
     }
 
@@ -61,10 +69,26 @@ $(document).ready(function() {
         return $newInputRow;
     }
 
+    function createDevourRow(burger) {
+        var $newDevourRow = $(
+            [
+                "<li class='list-group-item devour-item' style='background: grey; color: white; border-color: white'>",
+                "<span>",
+                burger.text,
+                "</span>",
+                "<input type='text' style='display: none;>",
+                "</li>"
+            ].join("")
+        );
+        $newDevourRow.data("burger", burger);
+        return $newDevourRow;
+    }
+
     function insertBurger(event) {
         event.preventDefault();
         var burger = {
             text: $newItemInput.val().trim(),
+            devour: false
         };
 
         $.post("/api/burgers", burger, getBurgers);

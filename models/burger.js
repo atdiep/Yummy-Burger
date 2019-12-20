@@ -6,6 +6,10 @@ module.exports = function(sequelize, DataTypes) {
             validate: {
                 len: [1, 50]
             }
+        },
+        devour: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     });
     return Burger;
